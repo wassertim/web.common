@@ -18,6 +18,7 @@ import wt.common.{disposable, closable}
 import scala.Some
 import wt.common.DataStore
 
+
 case class ImageHelper(paths: DataStore, movingMethod: Option[String] = Some("copy")) {
 
   def deleteImage(relativePath: String): Any = {
