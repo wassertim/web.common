@@ -48,19 +48,19 @@ case class ImageCacher(paths: DataStore, errorImagePath: Option[String]) {
 
   def getStream(bi: BufferedImage) = {
     val baos = new ByteArrayOutputStream()
-    ImageIO.write(bi, "png", baos)
+    ImageIO.write(bi, "jpg", baos)
     new ByteArrayInputStream(baos.toByteArray())
   }
 
   def convert(stream1: ImageOutputStream): InputStream = {
-    new ByteArrayInputStream(stream1.asInstanceOf[ByteArrayOutputStream].toByteArray())
+    new ByteArrayInputStream(stream1.asInstanceOf[ByteArrayOutputStream].toByteArray)
   }
 
   def cache(image: BufferedImage, cachePath: Path, quality: Float) = {
     val outputFile = new File(cachePath.toString)
     if (!outputFile.getParentFile.exists)
       outputFile.getParentFile.mkdirs
-    ImageIO.write(image, "png", cachePath.toFile)
+    ImageIO.write(image, "jpg", cachePath.toFile)
     //ImageHelper(paths).write(image, new FileImageOutputStream(outputFile), quality)
     cachePath.toFile
   }

@@ -41,7 +41,7 @@ case class ImageResizer(errorImagePath: Option[String] = None) {
   private def drawImage(sourceImage: BufferedImage, outputImage: BufferedImage, outputSize: Dimension, scaledRectangle: Rectangle, preserveAlpha: Boolean) = {
     disposable (outputImage.createGraphics()) { canvas =>
       //val scaledImage = sourceImage.getScaledInstance(scaledRectangle.width, scaledRectangle.height, Image.SCALE_SMOOTH)
-      val scaledImage = Scalr.resize(sourceImage, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_EXACT, outputSize.width, outputSize.height)
+      val scaledImage = Scalr.resize(sourceImage, Scalr.Method.SPEED, Scalr.Mode.FIT_EXACT, outputSize.width, outputSize.height)
       if (preserveAlpha) canvas.setComposite(AlphaComposite.Src)
       canvas.setPaint(Color.white)
       canvas.fillRect(0, 0, outputSize.width, outputSize.height)

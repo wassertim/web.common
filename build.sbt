@@ -1,6 +1,9 @@
-name := "Wassertim Common"
+import sbt._
+import Keys._
 
-organization := "wt.common"
+name := "Web Common"
+
+organization := "web.common"
 
 version := "0.1-SNAPSHOT"
 
