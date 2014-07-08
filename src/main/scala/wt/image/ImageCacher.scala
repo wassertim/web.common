@@ -11,17 +11,17 @@ import wt.common.DataStore
 
 case class ImageCacher(paths: DataStore, errorImagePath: Option[String]) {
 
-  def cachedImage[T](originalImageFile: File, imageId: Int, outputDimension: Dimension, compressQuality: Float, crop: Boolean, preserveAlpha: Boolean = true)(f: (Array[Byte]) => T): T = {
+  def cachedImage[T](originalImageFile: File, imageId: Int, outputDimension: Dimension, compressQuality: Float, crop: Boolean, preserveAlpha: Boolean = true)(f: (File) => T): T = {
     f(getCachedImage(originalImageFile, imageId, outputDimension, compressQuality, crop, preserveAlpha))
   }
 
-  def getCachedImage(originalImageFile: File, imageId: Int, outputDimension: Dimension, compressQuality: Float, crop: Boolean, preserveAlpha: Boolean = true) = {
+  def getCachedImage(originalImageFile: File, imageId: Int, outputDimension: Dimension, compressQuality: Float, crop: Boolean, preserveAlpha: Boolean = true): File = {
     val cachePath = buildCachePath(outputDimension, compressQuality, crop, imageId)
     if (Files.exists(cachePath)) {
-      toByteArr(cachePath.toFile)
+      cachePath.toFile
     } else {
       val resizedImage: BufferedImage = new ImageResizer(errorImagePath).resize(originalImageFile, outputDimension, preserveAlpha, crop)
-      toByteArr(cache(resizedImage, cachePath, compressQuality))
+      cache(resizedImage, cachePath, compressQuality)
     }
   }
 
@@ -49,7 +49,7 @@ case class ImageCacher(paths: DataStore, errorImagePath: Option[String]) {
   def getStream(bi: BufferedImage) = {
     val baos = new ByteArrayOutputStream()
     ImageIO.write(bi, "jpg", baos)
-    new ByteArrayInputStream(baos.toByteArray())
+    new ByteArrayInputStream(baos.toByteArray)
   }
 
   def convert(stream1: ImageOutputStream): InputStream = {

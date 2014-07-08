@@ -1,11 +1,14 @@
 package tests
 
+import java.nio.file.Paths
+
 import org.specs2.mutable.Specification
 
 import java.awt.Dimension
 import javax.imageio.ImageIO
 import java.io.File
-import wt.common.image.ImageResizer
+import wt.common.DataStore
+import wt.common.image.{ImageCacher, ImageResizer}
 
 class ImageResizerTests extends Specification {
   "Image resizer" should {
@@ -16,7 +19,9 @@ class ImageResizerTests extends Specification {
 
       val outputfile = new File("/users/tim/projects/web.common/data/image.jpg")
 
-      ImageIO.write(img, "jpg", outputfile)
+      val cacher = new ImageCacher(DataStore("/users/tim/projects/web.common/data"), None)
+      cacher.cache(img, Paths.get("/users/tim/projects/web.common/data/cache/cached.jpg"), 0.8F)
+      //ImageIO.write(img, "jpg", outputfile)
       img.getWidth mustEqual 600
       img.getHeight mustEqual 600
     }

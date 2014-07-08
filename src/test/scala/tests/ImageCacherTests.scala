@@ -19,8 +19,8 @@ class ImageCacherTests extends Specification {
       def ok: String = "test"
       val sr = ic.cachedImage(originalImage, 1, new Dimension(400, 400), 0.8F, false) {
         imageData =>
-          val bais = new ByteArrayInputStream(imageData)
-          ImageIO.read(bais)
+          //val bais = new ByteArrayInputStream(imageData)
+          ImageIO.read(imageData)
       }
       def cImage()(f: => String) = {
         ic.cachedImage(originalImage, 1, new Dimension(400, 400), 0.8F, false) { v =>
