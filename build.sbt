@@ -7,8 +7,12 @@ organization := "web.common"
 
 version := "0.1-SNAPSHOT"
 
+scalaVersion := "2.11.5"
+
+resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases"
+
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "2.3.7" % "test",
+  "org.specs2" % "specs2_2.11" % "2.4.16",
   "commons-io" % "commons-io" % "2.4",
   "org.imgscalr" % "imgscalr-lib" % "4.2",
   "commons-codec" % "commons-codec" % "1.7"
