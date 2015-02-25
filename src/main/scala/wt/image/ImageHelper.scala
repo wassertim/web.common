@@ -3,12 +3,15 @@ package wt.common.image
 import java.awt._
 import java.awt.image.{FilteredImageSource, RGBImageFilter, BufferedImage}
 import java.io._
+import java.security.{SecureRandom, cert}
 import javax.imageio.{IIOImage, ImageWriteParam, ImageIO}
 import javax.imageio.stream.ImageOutputStream
 
 import java.nio.file.Paths
 
 import java.net.URL
+import javax.net.ssl.{HttpsURLConnection, SSLContext, X509TrustManager, TrustManager}
+import javax.security.cert.X509Certificate
 
 import org.apache.commons.codec.digest.DigestUtils.md5Hex
 import java.util.UUID
@@ -18,6 +21,13 @@ import wt.common.{disposable, closable}
 import scala.Some
 import wt.common.DataStore
 
+class tmanager extends X509TrustManager {
+  def checkClientTrusted(x509Certificates: Array[cert.X509Certificate], s: String) = {}
+
+  def getAcceptedIssuers = null
+
+  def checkServerTrusted(x509Certificates: Array[cert.X509Certificate], s: String) = {}
+}
 
 case class ImageHelper(paths: DataStore, movingMethod: Option[String] = Some("copy")) {
 
@@ -29,6 +39,7 @@ case class ImageHelper(paths: DataStore, movingMethod: Option[String] = Some("co
     deleteImage(image.path)
     deleteFromRepo(image.id)
   }
+
   def move(source: File, destination: File) = {
     movingMethod match {
       case Some(x) if x == "move" =>
@@ -51,7 +62,18 @@ case class ImageHelper(paths: DataStore, movingMethod: Option[String] = Some("co
     file
   }
 
+  
   def save(imageUrl: String): Option[ImageEntity] = {
+    val trustAllCerts = Array[TrustManager](new tmanager())
+
+    // Install the all-trusting trust manager
+    try {
+      val sc = SSLContext.getInstance("TLS")
+      sc.init(null, trustAllCerts, new SecureRandom())
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
+    } catch {
+      case e => {}
+    }
     try {
       val file = saveToTempFolder(imageUrl)
       val imageEntity = getImageEntity(md5Hex(new FileInputStream(file)), imageType(file).toLowerCase)
@@ -132,7 +154,6 @@ case class ImageHelper(paths: DataStore, movingMethod: Option[String] = Some("co
     val img = makeColorTransparent(image)
     imageToBufferedImage(img)
   }
-
 
 
   def write(image: BufferedImage, outputFile: ImageOutputStream, quality: Float): ImageOutputStream = {

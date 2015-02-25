@@ -9,6 +9,7 @@ import javax.imageio.ImageIO
 import java.nio.file.Paths
 import wt.common.image.ImageCacher
 import wt.common.DataStore
+import org.specs2.execute._
 
 class ImageCacherTests extends Specification {
   "ImageCacher" should {

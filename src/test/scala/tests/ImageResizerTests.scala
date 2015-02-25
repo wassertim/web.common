@@ -9,6 +9,7 @@ import javax.imageio.ImageIO
 import java.io.File
 import wt.common.DataStore
 import wt.common.image.{ImageCacher, ImageResizer}
+import org.specs2.execute._
 
 class ImageResizerTests extends Specification {
   "Image resizer" should {
